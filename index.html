@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09131f">
+  <meta name="description" content="ติดตามสภาพแวดล้อมห้องเรียนจาก ESP32 แบบเรียลไทม์">
+  <title>Smart Classroom Dashboard · IoT 212</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230e2432'/%3E%3Cpath d='M12 36h10l6-18 9 30 6-12h9' fill='none' stroke='%235de4ce' stroke-width='5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">ข้ามไปเนื้อหาหลัก</a>
+  <header class="topbar">
+    <a class="brand" href="#overview" aria-label="Classroom กลับไปภาพรวม"><span class="brand-mark">⌁</span><span>classroom<span class="brand-dot">.</span><small>ENVIRONMENT MONITOR</small></span></a>
+    <nav aria-label="เมนูหลัก"><a class="nav-link active" href="#overview">ภาพรวม</a><a class="nav-link" href="#trends">แนวโน้ม</a><a class="nav-link" href="#history">ประวัติข้อมูล</a></nav>
+    <div class="project-tag"><span class="tiny-dot"></span> IoT <b>212</b></div>
+  </header>
+  <main id="main">
+    <section id="overview" class="intro">
+      <div><p class="eyebrow">CONNECTED SPACE · BETTER LEARNING</p><h1>Smart Classroom <span>Dashboard</span></h1><p class="subtitle">ห้องเรียนที่ดี เริ่มต้นจากสภาพแวดล้อมที่เข้าใจได้</p></div>
+      <div class="intro-meta"><span id="device-status" class="badge neutral" role="status"><i></i> กำลังเชื่อมต่อ</span><p id="today">เวลาไทย · Asia/Bangkok</p></div>
+    </section>
+
+    <div id="notice" class="notice" role="status" hidden></div>
+    <noscript><p class="notice">โปรดเปิด JavaScript เพื่อดูข้อมูลจาก Firebase</p></noscript>
+
+    <section class="overview-grid" aria-label="ภาพรวมคุณภาพห้องเรียน">
+      <article class="panel score-panel">
+        <div class="panel-heading"><span class="eyebrow">ROOM WELLNESS</span><button id="score-info" class="icon-button" aria-label="ดูวิธีคำนวณคะแนน">i</button></div>
+        <div class="score-layout"><div class="score-ring" id="score-ring"><svg viewBox="0 0 160 160" aria-hidden="true"><circle class="ring-track" cx="80" cy="80" r="66"/><circle id="ring-progress" cx="80" cy="80" r="66"/></svg><div><strong id="score-value">—</strong><span>/ 100</span></div></div><div class="score-copy"><h2>ภาพรวมคุณภาพห้องเรียน</h2><p id="score-label">รอข้อมูลเซ็นเซอร์</p><span id="score-caption">ประเมินจาก 5 ปัจจัยแวดล้อม</span></div></div>
+        <div class="score-bottom"><span><i class="tiny-dot"></i> ข้อมูลจำลองจากเซ็นเซอร์บน ESP32</span><span>LIVE INSIGHTS</span></div>
+      </article>
+      <article class="panel advice-panel"><div class="panel-heading"><span class="eyebrow">SMART INSIGHTS</span><span class="spark">✧</span></div><h2 id="advice-title">กำลังอ่านบรรยากาศในห้อง…</h2><p id="advice-text">เมื่อได้รับข้อมูล ระบบจะแสดงคำแนะนำที่เหมาะกับสภาพแวดล้อมล่าสุด</p><div class="device-line"><span class="device-icon">▣</span><div><strong id="device-name">ESP32-01</strong><small>อัปเดตจากบอร์ดทุกประมาณ 10 วินาที</small></div><span id="connection-status" class="connection">กำลังเชื่อมต่อ</span></div></article>
+    </section>
+
+    <section aria-labelledby="sensor-title"><div class="section-heading"><div><span class="eyebrow">LIVE ENVIRONMENT</span><h2 id="sensor-title">สภาพแวดล้อมตอนนี้</h2></div><p class="last-update">อัปเดตล่าสุด <span id="last-update">—</span><small id="data-age"></small></p></div><div id="sensor-grid" class="sensor-grid"></div></section>
+
+    <section id="trends" class="panel trend-panel" aria-labelledby="trend-title"><div class="chart-heading"><div><span class="eyebrow">ENVIRONMENT TRENDS</span><h2 id="trend-title">ทุกการเปลี่ยนแปลง มองเห็นได้</h2><p id="history-summary" class="muted">กำลังโหลดข้อมูลย้อนหลังสูงสุด 50 รายการ</p></div><div class="chart-control"><label for="sensor-select">เลือกเซ็นเซอร์</label><select id="sensor-select"><option value="temp">อุณหภูมิ</option><option value="humi">ความชื้น</option><option value="co2">CO₂</option><option value="pm25">PM2.5</option><option value="light">ความสว่าง</option><option value="noise">ระดับเสียง</option></select></div></div><div class="chart-key"><span><i id="chart-dot" class="tiny-dot"></i> <span id="chart-label">อุณหภูมิ (°C)</span></span><span>50 รายการล่าสุด</span></div><div class="chart-wrap"><canvas id="history-chart" role="img" aria-label="กราฟข้อมูลเซ็นเซอร์ย้อนหลัง"></canvas><div id="chart-state" class="chart-state">กำลังโหลดกราฟ…</div></div><div class="chart-stats"><div>ต่ำสุด <strong id="stat-min">—</strong></div><div>เฉลี่ย <strong id="stat-avg">—</strong></div><div>สูงสุด <strong id="stat-max">—</strong></div><span>ตามช่วงข้อมูลที่แสดง</span></div></section>
+
+    <section id="history" class="panel history-panel" aria-labelledby="history-title"><div class="section-heading"><div><span class="eyebrow">DATA LOG</span><h2 id="history-title">บันทึกข้อมูลล่าสุด</h2></div><button id="export-button" class="text-button" disabled><span aria-hidden="true">↓</span> ดาวน์โหลด CSV</button></div><div class="table-scroll" tabindex="0" role="region" aria-label="ตารางเซ็นเซอร์ เลื่อนแนวนอนเพื่อดูครบทุกค่า"><table><caption class="sr-only">ข้อมูลเซ็นเซอร์ 10 รายการล่าสุด เวลาไทย</caption><thead><tr><th scope="col">เวลา (ไทย)</th><th scope="col">อุณหภูมิ <small>°C</small></th><th scope="col">ความชื้น <small>%</small></th><th scope="col">CO₂ <small>ppm</small></th><th scope="col">PM2.5 <small>µg/m³</small></th><th scope="col">แสง <small>lux</small></th><th scope="col">เสียง <small>dB</small></th></tr></thead><tbody id="history-body"><tr><td colspan="7" class="empty-cell">กำลังโหลดข้อมูล…</td></tr></tbody></table></div><div class="table-footer"><span id="table-count">0 รายการ</span><span>ข้อมูลเรียงจากใหม่ไปเก่า · UTC+7</span></div></section>
+    <footer><span class="footer-brand">classroom<span> . </span><small>ออกแบบเพื่อห้องเรียนที่น่าอยู่ขึ้น</small></span><span>ESP32 + ESPHome <b>→</b> Firebase <b>→</b> Live Dashboard</span></footer>
+  </main>
+  <dialog id="score-dialog"><div class="dialog-heading"><h2>คะแนนห้องเรียนคำนวณอย่างไร?</h2><button id="close-dialog" class="icon-button" aria-label="ปิดรายละเอียด">×</button></div><p>คะแนนสาธิตสำหรับโครงงาน จากข้อมูลจำลองบนบอร์ด ไม่ใช่ AQI หรือมาตรฐานรับรองสุขภาพ</p><p>แต่ละเซ็นเซอร์ได้คะแนน 100 / 75 / 45 / 15 ตามระดับสี แล้วถ่วงน้ำหนัก: CO₂ 30%, PM2.5 30%, อุณหภูมิ 15%, ความชื้น 10%, เสียง 15% ความสว่างแสดงแยกและไม่คิดคะแนนรวม</p><div id="threshold-details"></div><p>แสดงคะแนนเฉพาะเมื่อมีครบทั้ง 5 ค่า และระบุเมื่อข้อมูลเก่า คำแนะนำเป็นกฎตามเซ็นเซอร์ ไม่ได้เรียกบริการ AI</p></dialog>
+</body>
+</html>
